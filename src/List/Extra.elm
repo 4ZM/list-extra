@@ -47,6 +47,7 @@ module List.Extra
         , stripPrefix
         , group
         , groupWhile
+        , groupBy
         , groupWhileTransitively
         , inits
         , tails
@@ -92,7 +93,7 @@ module List.Extra
 @docs scanl1, scanr, scanr1, unfoldr, iterate
 
 # Sublists
-@docs splitAt, takeWhileRight, dropWhileRight, span, break, stripPrefix, group, groupWhile, groupWhileTransitively, inits, tails, select, selectSplit
+@docs splitAt, takeWhileRight, dropWhileRight, span, break, stripPrefix, group, groupWhile, groupBy, groupWhileTransitively, inits, tails, select, selectSplit
 
 # Predicates
 @docs isPrefixOf, isSuffixOf, isInfixOf, isSubsequenceOf, isPermutationOf
@@ -992,6 +993,19 @@ groupWhile eq xs_ =
                     span (eq x) xs
             in
                 (x :: ys) :: groupWhile eq zs
+
+
+{-|  Group elements together using `==` after applying a function on each one.
+
+     groupBy .fu [{ fu = 1, bar = 2 }, { fu = 1, bar = 3 }, { fu = 2, bar = 2 }] == [[{fu = 1, bar = 2 }, { fu = 1, bar = 3 }], [{fu = 2, bar = 2}]]
+
+     groupBy first [(0,'a'),(0,'b'),(1,'c'),(1,'d')] == [[(0,'a'),(0,'b')],[(1,'c'),(1,'d')]]
+
+-}
+
+groupBy : (a -> comparable) -> List a -> List (List a)
+groupBy fn list =
+    groupWhile (\x y -> fn x == fn y) list
 
 
 {-| Group elements together, using a custom comparison test. Start a new group each time the comparison test doesn't hold for two adjacent elements.

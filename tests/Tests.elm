@@ -286,6 +286,29 @@ all =
                         (groupWhile (<) [ 1, 2, 3, 2, 4, 1, 3, 2, 1 ])
                         [ [ 1, 2, 3, 2, 4 ], [ 1, 3, 2 ], [ 1 ] ]
             ]
+        , describe "groupBy" <|
+            [ test "" <|
+                \() ->
+                    Expect.equal
+                        (groupBy first [ ( 0, 'a' ), ( 0, 'b' ), ( 1, 'c' ), ( 1, 'd' ) ])
+                        [ [ ( 0, 'a' ), ( 0, 'b' ) ], [ ( 1, 'c' ), ( 1, 'd' ) ] ]
+            , test "" <|
+                \() ->
+                    Expect.equal
+                        (groupBy .x
+                            [ { x = 1 }
+                            , { x = 2 }
+                            , { x = 2 }
+                            , { x = 3 }
+                            , { x = 2 }
+                            ]
+                        )
+                        [ [ { x = 1 } ]
+                        , [ { x = 2 }, { x = 2 } ]
+                        , [ { x = 3 } ]
+                        , [ { x = 2 } ]
+                        ]
+            ]
         , describe "groupWhileTransitively" <|
             [ test "" <|
                 \() ->
